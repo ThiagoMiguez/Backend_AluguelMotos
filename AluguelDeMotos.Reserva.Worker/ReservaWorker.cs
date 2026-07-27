@@ -15,7 +15,6 @@ namespace AluguelDeMotos.Reserva.Worker
   public class ReservaWorker : BackgroundService
   {
     private readonly ILogger<ReservaWorker> _logger;
-    //private readonly IServiceProvider _serviceProvider;
     private readonly IReservaService _reservaService;
     private readonly IConnection _connection;
     private readonly IChannel _channel;
@@ -23,18 +22,15 @@ namespace AluguelDeMotos.Reserva.Worker
 
     public ReservaWorker(
         ILogger<ReservaWorker> logger,
-        //IServiceProvider serviceProvider,
         IReservaService reservaService,
         IConfiguration configuration)
     {
       _logger = logger;
-      //_serviceProvider = serviceProvider;
       _reservaService = reservaService;
 
       var hostname = configuration.GetValue<string>("RabbitMQ:Hostname") ?? "localhost";
       _queueName = configuration.GetValue<string>("RabbitMQ:QueueName") ?? "reservas";
 
-      //var factory = new ConnectionFactory() { HostName = hostname };
       var factory = new ConnectionFactory()
       {
         HostName = hostname,
@@ -97,56 +93,9 @@ namespace AluguelDeMotos.Reserva.Worker
 
     private async Task ProcessarReserva(ReservaEvent evento)
     {
-      //using var scope = _serviceProvider.CreateScope();
-
-      /*
-      var reservaRepository = scope.ServiceProvider.GetRequiredService<IReservaRepository>();
-      var motoRepository = scope.ServiceProvider.GetRequiredService<IMotoRepository>();
-      var cacheService = scope.ServiceProvider.GetRequiredService<ICacheService>();
-
-      _logger.LogInformation("Processando reserva {ReservaId} para moto {MotoId}",
-          evento.ReservaId, evento.MotoId);*/
 
       try
       {
-        //var reserva = await reservaRepository.GetByIdAsync(evento.ReservaId);
-        /*var reserva = await reservaRepository.GetByIdAsync(evento.ReservaId);
-        _reservaService.ConfirmarReserva
-        if (reserva == null)
-        {
-          _logger.LogWarning("Reserva {ReservaId} não encontrada", evento.ReservaId);
-          return;
-        }*/
-
-        /*
-        var moto = await motoRepository.GetByIdAsync(evento.MotoId);
-        if (moto == null)
-        {
-          _logger.LogWarning("Moto {MotoId} não encontrada", evento.MotoId);
-          reserva.Status = StatusReserva.Erro;
-          reserva.MensagemErro = "Moto não encontrada";
-          await reservaRepository.UpdateAsync(reserva);
-          return;
-        }
-
-        if (!moto.Disponivel)
-        {
-          _logger.LogInformation("Moto {MotoId} não está disponível", evento.MotoId);
-          reserva.Status = StatusReserva.Cancelado;
-          reserva.MensagemErro = "Moto não disponível";
-          await reservaRepository.UpdateAsync(reserva);
-          await AtualizarCache(reserva, moto, cacheService);
-          return;
-        }
-
-        moto.Disponivel = false;
-        await motoRepository.UpdateAsync(moto);
-
-        reserva.Status = StatusReserva.Confirmado;
-        await reservaRepository.UpdateAsync(reserva);
-
-        await AtualizarCache(reserva, moto, cacheService);
-        */
         _logger.LogInformation("Inicio RabbitMQ", evento.ReservaId);
 
         // Simula o processamento da mensagem
@@ -176,33 +125,8 @@ namespace AluguelDeMotos.Reserva.Worker
       catch (Exception ex)
       {
         _logger.LogError(ex, "Erro ao processar reserva {ReservaId}", evento.ReservaId);
-        /*
-        var reserva = await reservaRepository.GetByIdAsync(evento.ReservaId);
-        if (reserva != null)
-        {
-          reserva.Status = StatusReserva.Erro;
-          reserva.MensagemErro = ex.Message;
-          await reservaRepository.UpdateAsync(reserva);
-        }*/
       }
     }
-
-    /*private async Task AtualizarCache(Reserva reserva, Moto moto, ICacheService cacheService)
-    {
-      var statusReserva = new
-      {
-        ReservaId = reserva.Id,
-        Status = reserva.Status.ToString(),
-        MotoDisponivel = moto.Disponivel,
-        MensagemErro = reserva.MensagemErro,
-        UltimaAtualizacao = reserva.AtualizadoEm ?? reserva.CriadoEm
-      };
-
-      await cacheService.SetAsync($"reserva:{reserva.Id}:status", statusReserva, TimeSpan.FromMinutes(10));
-      await cacheService.SetAsync($"moto:{moto.Id}:disponivel", moto.Disponivel, TimeSpan.FromMinutes(10));
-
-      _logger.LogInformation("Cache atualizado para reserva {ReservaId}", reserva.Id);
-    }*/
 
     public override void Dispose()
     {
