@@ -8,13 +8,12 @@ namespace ReservaMotos.Infrastructure.Messaging;
 
 public class RabbitMQEventPublisher : IEventPublisher
 {
-    private readonly IConnection _connection;
-    private readonly string _queueName;
-    private readonly ConnectionFactory _connectionFactory;
+  private readonly IConnection _connection;
+  private readonly string _queueName;
+  private readonly ConnectionFactory _connectionFactory;
 
   public RabbitMQEventPublisher(string hostname, string queueName)
-    {
-    //var factory = new ConnectionFactory() { HostName = hostname };
+  {
     _connectionFactory = new ConnectionFactory()
     {
       HostName = hostname,
@@ -23,23 +22,11 @@ public class RabbitMQEventPublisher : IEventPublisher
       Password = "guest"
     };
     _queueName = queueName;
-    /*
-    _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
-    
-    _queueName = queueName;
-    _hostname = hostname;
-    */
   }
 
   public async Task PublishReservaEventAsync(ReservaEvent reservaEvent)
-    {/* var factory = new ConnectionFactory()
-        {
-          HostName = _hostname,
-          Port = 5672,
-          UserName = "guest",
-          Password = "guest"
-        };
-    */
+  {
+
     await using var connection = _connectionFactory.CreateConnectionAsync().GetAwaiter().GetResult();    
     await using var channel = await connection.CreateChannelAsync();
       //await using var channel = await _connection.CreateChannelAsync();
@@ -65,10 +52,10 @@ public class RabbitMQEventPublisher : IEventPublisher
             mandatory: false,
             basicProperties: properties,
             body: body);
-    }
+  }
 
-    public void Dispose()
-    {
-        _connection?.Dispose();
-    }
+  public void Dispose()
+  {
+      _connection?.Dispose();
+  }
 }
