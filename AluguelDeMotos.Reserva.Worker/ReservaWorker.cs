@@ -117,6 +117,7 @@ namespace AluguelDeMotos.Reserva.Worker
             await _reservaService.AtualizarReserva(evento.reserva);
             await _reservaService.AtualizarCacheReservas();
             _logger.LogInformation("Reserva {ReservaId} confirmada com sucesso", evento.reserva.Id);
+            _logger.LogInformation("-----------------------------------------------------------------");
           }
         }
 
