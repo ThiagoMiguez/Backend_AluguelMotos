@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="AluguelDeMotos.Moto.Service/AluguelDeMotos.Moto.Service.csproj" Id="a5ca9c5f-f109-4a83-8b87-e0e91c9d7fa9" />
+  <Project Path="AluguelDeMotos.Redis.Service/AluguelDeMotos.Redis.Service.csproj" Id="05a8490a-0c90-434d-896a-5dda135ba814" />
+  <Project Path="AluguelDeMotos.Reserva.Worker/AluguelDeMotos.Reserva.Worker.csproj" Id="16485e60-773c-4ff2-9126-cd9eec39b1b8" />
+  <Project Path="AluguelDeMotos.Server/AluguelDeMotos.Server.csproj" Id="30471087-e7fc-4343-be8e-2321f7c99e6f" />
+  <Project Path="AluguelDeMotos.Service/AluguelDeMotos.Service.csproj" Id="94509d09-0761-454e-9b96-f2458cd70630" />
+  <Project Path="AluguelDeMotos.Shared/AluguelDeMotos.Shared.csproj" />
+  <Project Path="API/API.csproj" />
+</Solution>
